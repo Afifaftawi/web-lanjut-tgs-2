@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CRUD Lengkap Sederhana</title>
+    <link rel="stylesheet" href="jquery.dataTables.min.css">
+    <script src="jquery-3.7.0.min.js"></script>
+    <script src="jquery.dataTables.min.js"></script>
+</head>
+<body>
+
+<h2>Data Pengguna</h2>
+<button onclick="tambah()">Tambah</button>
+
+<table border="1" id="table">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Nama</th>
+            <th>Umur</th>
+            <th>Alamat</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>Afif</td>
+            <td>19</td>
+            <td>Bumi</td>
+            <td>
+                <button onclick="edit(this)">Edit</button>
+                <button onclick="hapus(this)">Hapus</button>
+            </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Gaisan</td>
+            <td>300</td>
+            <td>New York</td>
+            <td>
+                <button onclick="edit(this)">Edit</button>
+                <button onclick="hapus(this)">Hapus</button>
+            </td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Farhan</td>
+            <td>30</td>
+            <td>Lombok</td>
+            <td>
+                <button onclick="edit(this)">Edit</button>
+                <button onclick="hapus(this)">Hapus</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+$(document).ready(function() {
+    $('#table').DataTable();
+});
+
+// Fungsi Tambah
+function tambah() {
+    var table = $('#table').DataTable();
+    var no = table.rows().count() + 1;
+    var nama = prompt("Masukkan Nama:");
+    var umur = prompt("Masukkan Umur:");
+    var alamat = prompt("Masukkan Alamat:");
+    if(nama && umur && alamat){
+        var rowNode = table.row.add([no, nama, umur, alamat,
+            '<button onclick="edit(this)">Edit</button> <button onclick="hapus(this)">Hapus</button>'
+        ]).draw(false).node();
+    }
+}
+
+function edit(btn) {
+    var table = $('#table').DataTable();
+    var row = $(btn).closest('tr');
+    var data = table.row(row).data();
+    var nama = prompt("Edit Nama:", data[1]);
+    var umur = prompt("Edit Umur:", data[2]);
+    var alamat = prompt("Edit Alamat:", data[3]);
+    if(nama && umur && alamat){
+        table.row(row).data([data[0], nama, umur, alamat,
+            '<button onclick="edit(this)">Edit</button> <button onclick="hapus(this)">Hapus</button>'
+        ]).draw(false);
+    }
+}
+
+function hapus(btn) {
+    var table = $('#table').DataTable();
+    var row = $(btn).closest('tr');
+    table.row(row).remove().draw(false);
+    table.rows().every(function(rowIdx){
+        var d = this.data();
+        d[0] = rowIdx + 1;
+        this.data(d);
+    });
+}
+</script>
+
+</body>
+</html>
